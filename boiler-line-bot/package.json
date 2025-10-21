@@ -1,0 +1,7 @@
+{
+  "name": "boiler-line-bot",
+  "type": "module",
+  "dependencies": {
+    "@line/bot-sdk": "^9.0.0"
+  }
+}

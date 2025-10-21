@@ -1,0 +1,17 @@
+[
+  {
+    "id": "boiler-0001",
+    "category": "燃焼",
+    "question": "理論空気量とは何を指す？",
+    "choices": [
+      "完全燃焼に必要な最小の空気量",
+      "実際に供給する空気量",
+      "燃料の発熱量",
+      "煙突のドラフト量"
+    ],
+    "answer_index": 0,
+    "explain_slug": "boiler-0001-lean-air",
+    "difficulty": 2,
+    "tags": ["理論空気量", "燃焼"]
+  }
+]
