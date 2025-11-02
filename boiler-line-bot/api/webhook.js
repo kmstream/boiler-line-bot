@@ -21,12 +21,7 @@ const questions = [
   }
 ];
 
-function pick() {
-  return questions[Math.floor(Math.random() * questions.length)];
-}
-
 export default async function handler(req, res) {
-  // LINE署名検証
   const mw = middleware({ channelSecret: config.channelSecret });
   await new Promise((resolve, reject) =>
     mw(req, res, (err) => (err ? reject(err) : resolve()))
@@ -35,12 +30,8 @@ export default async function handler(req, res) {
   const events = req.body.events || [];
   await Promise.all(
     events.map(async (event) => {
-      if (
-        event.type === "message" &&
-        event.message.type === "text" ||
-        event.type === "follow"
-      ) {
-        const q = pick();
+      if (event.type === "message" && event.message.type === "text") {
+        const q = questions[0];
         return client.replyMessage(event.replyToken, {
           type: "text",
           text: `【ボイラー技士】\n${q.question}`,
@@ -56,32 +47,6 @@ export default async function handler(req, res) {
             }))
           }
         });
-      }
-      if (event.type === "postback") {
-        const data = Object.fromEntries(
-          new URLSearchParams(event.postback.data)
-        );
-        const q = questions.find((x) => x.id === data.qid);
-        const ok = Number(data.a) === q.answer_index;
-        const url = `https://your-domain.com/explain/${q.explain_slug}/?utm_source=line_bot&utm_medium=msg&utm_campaign=boiler&quiz=${q.id}`;
-        return client.replyMessage(event.replyToken, [
-          {
-            type: "text",
-            text: ok
-              ? "✅ 正解！"
-              : `❌ 不正解… 正解は「${q.choices[q.answer_index]}」`
-          },
-          {
-            type: "template",
-            altText: "解説を見る",
-            template: {
-              type: "buttons",
-              title: "解説と教材",
-              text: "詳しい解説はこちら",
-              actions: [{ type: "uri", label: "解説ページへ", uri: url }]
-            }
-          }
-        ]);
       }
     })
   );
